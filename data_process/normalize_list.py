@@ -1,17 +1,8 @@
 import simplejson
-from data_sets.classified_titles_list import classified_titles_list
+from sentence_normalizer import normalize_sentence
+from data_sets.classified_titles_list_info import classified_titles_list
 from data_sets.values_and_labels_dicts import area_label_value_dict
 
-def normalize_sentence(sentence):
-    # remove ' and .
-    sentence = sentence.replace("'", "")
-    sentence = sentence.replace(".", "")
-    # change , for space
-    sentence = sentence.replace(", ", " ")
-    sentence = sentence.replace(",", " ")
-    sentence = sentence.replace("/", " ")
-    sentence = sentence.lower()
-    return sentence
 
 normalized_sentences = []
 classified_sentences = []

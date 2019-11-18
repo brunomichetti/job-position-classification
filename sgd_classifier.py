@@ -1,10 +1,11 @@
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.linear_model import SGDClassifier
+from sklearn import metrics
 
-from train_and_test_definition import X_train, y_train
-from data_process.normalize_list import normalize_sentence
-from data_process.data_sets.values_and_labels_dicts import area_value_label_dict
+from data_process.sentence_normalizer import normalize_sentence
+from data_process.data_sets.values_and_labels_dicts import area_value_label_dict, area_label_value_dict
+from train_and_test_definition import X_train, y_train, X_test, y_test
 from best_params import best_vect_ngram_range, best_use_idf, best_alpha, best_random_state, best_max_iter
 
 # Count vectorizer
@@ -26,6 +27,13 @@ clf = SGDClassifier(
 )
 clf.fit(X_train_tfidf, y_train)
 
+# Test and show results
+X_test_counts = count_vect.transform(X_test)
+X_test_tfidf = tfidf_transformer.transform(X_test_counts)
+test_predict = clf.predict(X_test_tfidf)
+print(metrics.classification_report(y_test, test_predict, target_names=list(area_label_value_dict.keys())))
+
+# Classify 1000 new examples
 with open('example_titles.csv') as f:
     lines = f.readlines()
     lines_without_n = [line.split('\n')[0] for line in lines][:1000]
@@ -41,3 +49,4 @@ with open('example_titles.csv') as f:
             file.write("\t")
             file.write(area_value_label_dict[y_result[i]])
             file.write("\n")
+        file.close()
