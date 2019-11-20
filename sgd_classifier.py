@@ -36,7 +36,7 @@ print(metrics.classification_report(y_test, test_predict, target_names=list(area
 # Classify 1000 new examples
 with open('example_titles.csv') as f:
     lines = f.readlines()
-    lines_without_n = [line.split('\n')[0] for line in lines][:1000]
+    lines_without_n = [line.split('\n')[0] for line in lines][1001:2001]
     normalized_s = [normalize_sentence(l1) for l1 in lines_without_n]
 
     X_counts = count_vect.transform(normalized_s)

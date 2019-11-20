@@ -1,6 +1,6 @@
 from data_process.data_sets.normalized_and_classified_sentences import normalized_sentences, classified_sentences
 
-TEST_SIZE=50
+TEST_SIZE=150
 TRAIN_SIZE=len(normalized_sentences)
 
 X_train = normalized_sentences[0:TRAIN_SIZE-TEST_SIZE]
