@@ -1,12 +1,12 @@
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
-from sklearn.linear_model import SGDClassifier
+from sklearn.neural_network import MLPClassifier
 from sklearn import metrics
 
 from data_process.sentence_normalizer import normalize_sentence
 from data_process.data_sets.values_and_labels_dicts import area_value_label_dict, area_label_value_dict
 from train_and_test_definition import X_train, y_train, X_test, y_test
-from best_params_sgd import best_vect_ngram_range, best_use_idf, best_alpha, best_random_state, best_max_iter
+from best_params_mlp import best_alpha, best_hidden_layer_sizes, best_random_state, best_use_idf, best_vect_ngram_range
 
 # Count vectorizer
 # Transform documents to feature vectors with fit and transform
@@ -17,13 +17,11 @@ X_train_counts = count_vect.fit_transform(X_train)
 tfidf_transformer = TfidfTransformer(use_idf=best_use_idf)
 X_train_tfidf = tfidf_transformer.fit_transform(X_train_counts)
 
-clf = SGDClassifier(
-    loss='hinge',
-    penalty='l2',
+clf = MLPClassifier(
+    solver='lbfgs',
     alpha=best_alpha,
-    random_state=best_random_state,
-    max_iter=best_max_iter,
-    tol=None
+    hidden_layer_sizes=best_hidden_layer_sizes,
+    random_state=best_random_state
 )
 clf.fit(X_train_tfidf, y_train)
 
@@ -43,7 +41,7 @@ with open('example_titles.csv') as f:
     X_tfidf = tfidf_transformer.transform(X_counts)
     y_result = clf.predict(X_tfidf)
 
-    with open('examples_results_sgd.tsv', 'w') as file:
+    with open('examples_results_mlp.tsv', 'w') as file:
         for i in range(1000):
             file.write(lines_without_n[i])
             file.write("\t")
